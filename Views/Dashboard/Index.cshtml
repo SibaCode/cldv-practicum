@@ -1,0 +1,66 @@
+@{
+    ViewData["Title"] = "Real-Time Dashboard";
+    var low = ViewBag.Low;
+    var med = ViewBag.Med;
+    var high = ViewBag.High;
+
+    Func<int, int, string> GetBar = (q, max) =>
+    {
+        int barLength = 25;
+        int filled = Math.Min((int)((q / (double)max) * barLength), barLength);
+        return new string('#', filled) + new string('-', barLength - filled);
+    };
+
+    Func<int, string> GetColor = (q) =>
+    {
+        if (q < 10) return "green";
+        else if (q < 20) return "orange";
+        else return "red";
+    };
+}
+
+<h1>Real-Time E-Commerce Dashboard</h1>
+<hr />
+
+<div style="font-size: 18px; margin-bottom: 30px;">
+    <h3>Low Traffic</h3>
+    <p><strong>Incoming Queue:</strong> @low.Queue</p>
+    <p><strong>Processed:</strong> @low.Processed</p>
+    <p><strong>Instances:</strong> @low.Instances</p>
+    <p>
+        Queue Load: 
+        <span style="color:@GetColor(low.Queue); font-family: monospace;">
+            @GetBar(low.Queue, 25)
+        </span>
+    </p>
+</div>
+
+<div style="font-size: 18px; margin-bottom: 30px;">
+    <h3>Medium Traffic</h3>
+    <p><strong>Incoming Queue:</strong> @med.Queue</p>
+    <p><strong>Processed:</strong> @med.Processed</p>
+    <p><strong>Instances:</strong> @med.Instances</p>
+    <p>
+        Queue Load: 
+        <span style="color:@GetColor(med.Queue); font-family: monospace;">
+            @GetBar(med.Queue, 25)
+        </span>
+    </p>
+</div>
+
+<div style="font-size: 18px; margin-bottom: 30px;">
+    <h3>High Traffic</h3>
+    <p><strong>Incoming Queue:</strong> @high.Queue</p>
+    <p><strong>Processed:</strong> @high.Processed</p>
+    <p><strong>Instances:</strong> @high.Instances</p>
+    <p>
+        Queue Load: 
+        <span style="color:@GetColor(high.Queue); font-family: monospace;">
+            @GetBar(high.Queue, 25)
+        </span>
+    </p>
+</div>
+
+<script>
+    setTimeout(() => location.reload(), 1000); // Refresh every second
+</script>
